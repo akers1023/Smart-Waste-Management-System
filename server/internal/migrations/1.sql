@@ -12,7 +12,7 @@ CREATE TABLE "users" (
   "poo" text,
   "por" text,
   "email" text UNIQUE,
-  "username" text UNIQUE,
+  "username" text UNIQUE, 
   "phone" text UNIQUE NOT NULL,
   "password" text,
   "category" float,
@@ -33,19 +33,19 @@ CREATE TABLE "trashBins" (
 CREATE TABLE reports (
   "id" text PRIMARY KEY,
   "description" text,
-  "transactionIDs" text[] NOT NULL,
+  "transaction_ids" text[] NOT NULL,
   "created_at" TIMESTAMPTZ NOT NULL,
   "updated_at" TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE "transactions" (
   "id" text PRIMARY KEY,
-  "userID" text,
-  "trashBinID" text,
-  "reportID" text,
-  FOREIGN KEY ("trashBinID") REFERENCES "trashBins" ("id"),
-  FOREIGN KEY ("userID") REFERENCES "users" ("id"),
-  FOREIGN KEY ("reportID") REFERENCES "reports" ("id"),
+  "user_id" text,
+  "trash_bin_id" text,
+  "report_id" text,
+  FOREIGN KEY ("user_id") REFERENCES "users" ("id"),
+  FOREIGN KEY ("trash_bin_id") REFERENCES "trashBins" ("id"),
+  FOREIGN KEY ("report_id") REFERENCES "reports" ("id"),
   "updated_at" TIMESTAMPTZ NOT NULL,
   "created_at" TIMESTAMPTZ NOT NULL
 );
@@ -53,27 +53,29 @@ CREATE TABLE "transactions" (
 -- bo sung sau
 CREATE TABLE permission (
     "id" text PRIMARY KEY,
+    "permission_name" text
 );
 
 CREATE TABLE roles (
   "id" text PRIMARY KEY,
-  "permissionID" text,
-  "roleName" text UNIQUE,
-  FOREIGN KEY ("permissionID") REFERENCES "permission" ("id")
+  "permission_id" text,
+  "role_name" text UNIQUE,
+  FOREIGN KEY ("permission_id") REFERENCES "permission" ("id")
 );
 
 CREATE TABLE userRoles (
-  "userID" text,
-  "roleID" text,
-  PRIMARY KEY ("userID", "roleID"),
-  FOREIGN KEY ("userID") REFERENCES "users" ("id"),
-  FOREIGN KEY ("roleID") REFERENCES "roles" ("id")
+  "user_id" text,
+  "role_id" text,
+  PRIMARY KEY ("user_id", "role_id"),
+  FOREIGN KEY ("user_id") REFERENCES "users" ("id"),
+  FOREIGN KEY ("role_id") REFERENCES "roles" ("id")
 );
 
 -- +migrate Down
-DROP TABLE userRoles;
-DROP TABLE roles;
-DROP TABLE permission;
-DROP TABLE transactions;
 DROP TABLE users;
 DROP TABLE trashBins;
+DROP TABLE reports;
+DROP TABLE transactions;
+DROP TABLE permission;
+DROP TABLE roles;
+DROP TABLE userRoles;
