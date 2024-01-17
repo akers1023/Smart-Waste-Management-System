@@ -2,11 +2,11 @@ package models
 
 import "gorm.io/gorm"
 
-type Roles struct {
+type Role struct {
 	ID       string  `json:"id" gorm:"primaryKey"`
-	RoleName *string `json:"roleName"`
+	RoleName *string `json:"role_name"`
 }
 
 func MigateRoles(db *gorm.DB) error {
-	return db.AutoMigrate(&Roles{})
+	return db.AutoMigrate(&Role{})
 }
