@@ -6,7 +6,7 @@ CREATE TABLE "users" (
   "middle_name" text,
   "last_name" text,
   "gender" text NOT NULL,
-  "date_of_birth" datetime,
+  "date_of_birth" date,
   "nationality" text,
   "cin" char(12),
   "poo" text,
@@ -22,7 +22,7 @@ CREATE TABLE "users" (
   "updated_at" TIMESTAMPTZ NOT NULL
 );
 
-CREATE TABLE "trashBins" (
+CREATE TABLE "trash_bins" (
   "id" text PRIMARY KEY,
   "trash_level" decimal(5,2),
   "location" text,
@@ -44,7 +44,7 @@ CREATE TABLE "transactions" (
   "trash_bin_id" text,
   "report_id" text,
   FOREIGN KEY ("user_id") REFERENCES "users" ("id"),
-  FOREIGN KEY ("trash_bin_id") REFERENCES "trashBins" ("id"),
+  FOREIGN KEY ("trash_bin_id") REFERENCES "trash_bins" ("id"),
   FOREIGN KEY ("report_id") REFERENCES "reports" ("id"),
   "updated_at" TIMESTAMPTZ NOT NULL,
   "created_at" TIMESTAMPTZ NOT NULL
@@ -63,7 +63,7 @@ CREATE TABLE roles (
   FOREIGN KEY ("permission_id") REFERENCES "permission" ("id")
 );
 
-CREATE TABLE userRoles (
+CREATE TABLE user_roles (
   "user_id" text,
   "role_id" text,
   PRIMARY KEY ("user_id", "role_id"),
@@ -73,9 +73,9 @@ CREATE TABLE userRoles (
 
 -- +migrate Down
 DROP TABLE users;
-DROP TABLE trashBins;
+DROP TABLE trash_bins;
 DROP TABLE reports;
 DROP TABLE transactions;
 DROP TABLE permission;
 DROP TABLE roles;
-DROP TABLE userRoles;
+DROP TABLE user_roles;

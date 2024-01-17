@@ -12,7 +12,7 @@ WORKDIR $GOPATH/src/go-fiber-postgres
 
 COPY . .
 
-RUN go mod init github.com/akers1023
+RUN go mod init github.com/akers1023/Smart-Waste-Management-System
 
 # Add missing dependencies
 RUN go get github.com/dgrijalva/jwt-go
