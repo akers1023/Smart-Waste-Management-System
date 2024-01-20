@@ -10,7 +10,6 @@ import (
 // xem lai category nen dung string hay dung pointer string
 type User struct {
 	ID           string    `json:"id" gorm:"primaryKey"`
-	FullName     string    `json:"full_name"`
 	FirstName    *string   `json:"first_name" validate:"required,min=2,max=100"`
 	MiddleName   *string   `json:"middle_name" validate:"required,min=2,max=100"`
 	LastName     *string   `json:"last_name" validate:"required,min=2,max=100"`

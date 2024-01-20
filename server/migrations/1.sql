@@ -1,7 +1,6 @@
 -- +migrate Up
 CREATE TABLE "users" (
   "id" text PRIMARY KEY,
-  "full_name" text,
   "first_name" text,
   "middle_name" text,
   "last_name" text,
