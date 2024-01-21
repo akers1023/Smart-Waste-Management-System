@@ -24,6 +24,7 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{Repository: Repository{DB: db}}
 }
 
+// Check Role o service hay repository?
 // Create Account by phone number (Owner only)
 func (ur *UserRepository) CreateUser(ctx *fiber.Ctx, user models.User) error {
 	// Kiểm tra nếu vai trò là Owner
@@ -67,7 +68,10 @@ func (ur *UserRepository) CreateUser(ctx *fiber.Ctx, user models.User) error {
 
 // View information account by uid
 func (ur *UserRepository) GetUserByID(ctx *fiber.Ctx, userID string) (*models.User, error) {
-	var user models.User
-
+	user := models.User{}
+	err := ur.DB.Where("id = ?", userID).First(&user).Error
+	if err != nil {
+		return nil, utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "user not found")
+	}
 	return &user, nil
 }

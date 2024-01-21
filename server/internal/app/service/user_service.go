@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"log"
+	"net/http"
 
 	"github.com/akers1023/Smart-Waste-Management-System/internal/app/models"
 	"github.com/akers1023/Smart-Waste-Management-System/internal/app/repository"
@@ -27,11 +28,15 @@ func (us *UserService) RegisterUser(ctx *fiber.Ctx, user models.User) error {
 	return nil
 }
 
-func (us *UserService) GetUserByID(ctx *fiber.Ctx, userID string) (*UserService, error) {
+func (us *UserService) GetUserByID(ctx *fiber.Ctx, userID string) (*models.User, error) {
 	if err := utils.MatchUserTypeToUID(ctx, userID); err != nil {
-		// return utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Request failed")
+		return nil, utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Request failed")
 	}
-	return nil, nil
+	user, err := us.UserRepo.GetUserByID(ctx, userID)
+	if err != nil {
+		log.Println()
+	}
+	return user, nil
 }
 
 // func (us *UserService) GetUserByID(ctx context.Context, userID string) (*models.User, error) {

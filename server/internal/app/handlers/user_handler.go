@@ -37,7 +37,7 @@ func (uh *UserHandler) RegisterUser(ctx *fiber.Ctx) error {
 }
 
 // View information account by uid
-func (uh *UserHandler) View(ctx *fiber.Ctx) error {
+func (uh *UserHandler) ViewInfomationUser(ctx *fiber.Ctx) error {
 	userID := ctx.Params("id")
 
 	user, err := uh.UserService.GetUserByID(ctx, userID)
@@ -45,7 +45,11 @@ func (uh *UserHandler) View(ctx *fiber.Ctx) error {
 		return utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "Failed to get user by ID")
 	}
 
-	return ctx.Status(http.StatusOK).JSON(user)
+	// Trả về thành công nếu không có lỗi
+	return ctx.Status(http.StatusOK).JSON(&fiber.Map{
+		"message": "user information",
+		"data":    user,
+	})
 }
 
 // Signup by phone number (Owner only)

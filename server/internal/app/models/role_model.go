@@ -4,6 +4,8 @@ package models
 type Role interface {
 	GetName() string
 	GetPermissions() []string
+	// Login()
+	// Register()
 }
 
 type Owner struct {
