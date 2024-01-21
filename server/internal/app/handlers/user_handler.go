@@ -36,11 +36,23 @@ func (uh *UserHandler) RegisterUser(ctx *fiber.Ctx) error {
 		"message": "user has been added"})
 }
 
+// View information account by uid
+func (uh *UserHandler) View(ctx *fiber.Ctx) error {
+	userID := ctx.Params("id")
+
+	user, err := uh.UserService.GetUserByID(ctx, userID)
+	if err != nil {
+		return utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "Failed to get user by ID")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(user)
+}
+
 // Signup by phone number (Owner only)
 
 // Signup (Update account) by code (Staff)
 // Signin by phone number
 // Delete Account (Admin)
 // Update Account
-// View information account
+
 // View all accounts (Admin, Owner)

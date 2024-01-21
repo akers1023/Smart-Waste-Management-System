@@ -1,12 +1,38 @@
 package models
 
-import "gorm.io/gorm"
-
-type Role struct {
-	ID       string  `json:"id" gorm:"primaryKey"`
-	RoleName *string `json:"role_name" validate:"required,eq=OWNER|eq=ADMIN|eq=USER"`
+// Code demo, xac dinh Role va Quyen
+type Role interface {
+	GetName() string
+	GetPermissions() []string
 }
 
-func MigateRoles(db *gorm.DB) error {
-	return db.AutoMigrate(&Role{})
+type Owner struct {
+}
+
+func (o *Owner) GetName() string {
+	return "Owner"
+}
+
+func (o *Owner) GetPermissions() []string {
+	return []string{"read", "write", "delete"}
+}
+
+type Admin struct{}
+
+func (a *Admin) GetName() string {
+	return "Admin"
+}
+
+func (a *Admin) GetPermissions() []string {
+	return []string{"read", "write"}
+}
+
+type Staff struct{}
+
+func (u *Staff) GetName() string {
+	return "User"
+}
+
+func (u *Staff) GetPermissions() []string {
+	return []string{"read"}
 }

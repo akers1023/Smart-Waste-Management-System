@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -25,51 +26,48 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 
 // Create Account by phone number (Owner only)
 func (ur *UserRepository) CreateUser(ctx *fiber.Ctx, user models.User) error {
-	user.ID = uuid.New().String()
+	// Kiểm tra nếu vai trò là Owner
+	if ownerRole, ok := user.Role.(*models.Owner); ok {
+		name := ownerRole.GetName()
+		fmt.Printf(name)
 
-	validationErr := validator.New().Struct(user)
-	if validationErr != nil {
+		user.ID = uuid.New().String()
+
+		validationErr := validator.New().Struct(user)
+		if validationErr != nil {
+			return utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Validation failed")
+		}
+
+		token, refreshToken, _ := utils.GenerateAllTokens(*user.Phone, user.ID, *user.FirstName, *user.MiddleName, *user.LastName)
+		user.Token = &token
+		user.RefreshToken = &refreshToken
+
+		password := utils.HashPassword(*user.Password)
+		user.Password = &password
+
+		user.CreatedAt, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		user.UpdatedAt, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+
+		// err = NewUserRepository(ur.DB.Create(&user))
+		err := ur.DB.Create(&user).Error
+		if err != nil {
+			return utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "Failed to create user")
+		}
+		return nil
+	} else {
 		return utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Validation failed")
 	}
-
-	// Update sau khi co day du Roles
-	token, refreshToken, _ := utils.GenerateAllTokens(*user.Phone, user.ID, *user.FirstName, *user.MiddleName, *user.LastName)
-	user.Token = &token
-	user.RefreshToken = &refreshToken
-
-	password := utils.HashPassword(*user.Password)
-	user.Password = &password
-
-	user.CreatedAt, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
-	user.UpdatedAt, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
-
-	// err = NewUserRepository(ur.DB.Create(&user))
-	err := ur.DB.Create(&user).Error
-	if err != nil {
-		return utils.HandleErrorResponse(ctx, http.StatusInternalServerError, "Failed to create user")
-	}
-	return nil
 }
 
 // Signup (Update account) by code (Staff)
 // Signin by phone number
 // Delete Account (Admin)
 // Update Account
-// View information account
 // View all accounts (Admin, Owner)
-func (ur *UserRepository) GetUserByID(ctx *fiber.Ctx, userID string) (*models.User, error) {
-	// Logic để truy vấn thông tin user từ cơ sở dữ liệu
-	var user models.User
-	// err := ur.DB.QueryRowContext(ctx, "SELECT id, full_name, email FROM users WHERE id = ?", userID).
-	// 	Scan(&user.ID, &user.FullName, &user.Email)
 
-	// if err != nil {
-	// 	if errors.Is(err, sql.ErrNoRows) {
-	// 		return nil, errors.New("user not found")
-	// 	}
-	// 	log.Println("Error getting user:", err)
-	// 	return nil, errors.New("failed to get user")
-	// }
+// View information account by uid
+func (ur *UserRepository) GetUserByID(ctx *fiber.Ctx, userID string) (*models.User, error) {
+	var user models.User
 
 	return &user, nil
 }

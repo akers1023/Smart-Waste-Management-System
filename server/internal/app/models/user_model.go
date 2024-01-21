@@ -8,12 +8,14 @@ import (
 
 // username va email bo sung xac thuc dang nhap sau
 // xem lai category nen dung string hay dung pointer string
+// xem lai role nen dung gi
 type User struct {
 	ID           string    `json:"id" gorm:"primaryKey"`
 	FirstName    *string   `json:"first_name" validate:"required,min=2,max=100"`
 	MiddleName   *string   `json:"middle_name" validate:"required,min=2,max=100"`
 	LastName     *string   `json:"last_name" validate:"required,min=2,max=100"`
 	Gender       *string   `json:"gender" validate:"required,eq=male|eq=female"`
+	RoleName     *string   `json:"role_name" validate:"required"`
 	DateOfBirth  time.Time `json:"date_of_birth"`
 	Nationality  *string   `json:"nationality" validate:"required"`
 	CIN          *[12]byte `json:"cin" validate:"required,min=12"`
@@ -28,6 +30,7 @@ type User struct {
 	RefreshToken *string   `json:"refresh_token"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
+	Role         Role      `json:"role"`
 }
 
 func MigrateUser(db *gorm.DB) error {

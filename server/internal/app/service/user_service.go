@@ -6,6 +6,7 @@ import (
 
 	"github.com/akers1023/Smart-Waste-Management-System/internal/app/models"
 	"github.com/akers1023/Smart-Waste-Management-System/internal/app/repository"
+	"github.com/akers1023/Smart-Waste-Management-System/internal/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -24,6 +25,13 @@ func (us *UserService) RegisterUser(ctx *fiber.Ctx, user models.User) error {
 		return errors.New("failed to register user")
 	}
 	return nil
+}
+
+func (us *UserService) GetUserByID(ctx *fiber.Ctx, userID string) (*UserService, error) {
+	if err := utils.MatchUserTypeToUID(ctx, userID); err != nil {
+		// return utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Request failed")
+	}
+	return nil, nil
 }
 
 // func (us *UserService) GetUserByID(ctx context.Context, userID string) (*models.User, error) {

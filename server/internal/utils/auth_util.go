@@ -3,7 +3,7 @@ package utils
 import (
 	"errors"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 )
 
 func CheckUserType(context *fiber.Ctx, role string) (err error) {
