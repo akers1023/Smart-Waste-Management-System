@@ -6,8 +6,8 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/akers1023/Smart-Waste-Management-System/internal/app/models"
 	"github.com/akers1023/Smart-Waste-Management-System/internal/connections"
-	"github.com/akers1023/Smart-Waste-Management-System/internal/models"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
