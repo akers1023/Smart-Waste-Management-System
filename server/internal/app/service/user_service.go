@@ -28,13 +28,30 @@ func (us *UserService) RegisterUser(ctx *fiber.Ctx, user models.User) error {
 	return nil
 }
 
+func (us *UserService) Update(ctx *fiber.Ctx, user models.User) (*models.User, error) {
+	foundUser, err := us.UserRepo.UpdateUser(ctx, user)
+	if err != nil {
+		return nil, utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Request Login failed")
+	}
+
+	return foundUser, nil
+}
+
+func (us *UserService) LoginUser(ctx *fiber.Ctx, user models.User) (*models.User, error) {
+	foundUser, err := us.UserRepo.SigninByPhoneNumber(ctx, user)
+	if err != nil {
+		return nil, utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Request Login failed")
+	}
+	return foundUser, nil
+}
+
 func (us *UserService) GetUserByID(ctx *fiber.Ctx, userID string) (*models.User, error) {
 	if err := utils.MatchUserTypeToUID(ctx, userID); err != nil {
-		return nil, utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Request failed")
+		return nil, utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Request Get failed")
 	}
 	user, err := us.UserRepo.GetUserByID(ctx, userID)
 	if err != nil {
-		log.Println()
+		return nil, utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Request abc failed")
 	}
 	return user, nil
 }
