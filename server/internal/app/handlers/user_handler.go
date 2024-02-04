@@ -17,7 +17,7 @@ func NewUserHandler(userService *service.UserService) *UserHandler {
 	return &UserHandler{UserService: userService}
 }
 
-func (uh *UserHandler) RegisterUser(ctx *fiber.Ctx) error {
+func (uh *UserHandler) Register(ctx *fiber.Ctx) error {
 	user := models.User{}
 
 	// Đọc dữ liệu từ request body và chuyển đổi thành đối tượng User
@@ -34,6 +34,40 @@ func (uh *UserHandler) RegisterUser(ctx *fiber.Ctx) error {
 	// Trả về thành công nếu không có lỗi
 	return ctx.Status(http.StatusOK).JSON(&fiber.Map{
 		"message": "user has been added"})
+}
+
+// Signup (Update account) by code (Staff)
+func (uh *UserHandler) Signup(ctx *fiber.Ctx) error {
+	user := models.User{}
+
+	foundUser, err := uh.UserService.LoginUser(ctx, user)
+	if err != nil {
+		return utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Request Login failed")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(&fiber.Map{
+		"massage": "Register Successfully!",
+		"user":    foundUser,
+	})
+}
+func (uh *UserHandler) Login(ctx *fiber.Ctx) error {
+	user := models.User{}
+
+	err := ctx.BodyParser(&user)
+	if err != nil {
+		return utils.HandleErrorResponse(ctx, http.StatusUnprocessableEntity, "Invalid request payload")
+	}
+
+	foundUser, err := uh.UserService.LoginUser(ctx, user)
+	if err != nil {
+		return utils.HandleErrorResponse(ctx, http.StatusBadRequest, "Request Login failed")
+	}
+
+	return ctx.Status(http.StatusOK).JSON(&fiber.Map{
+		"full_name":     "Hello " + *foundUser.FirstName + *foundUser.LastName,
+		"message":       "Login successfully",
+		"token":         foundUser.Token,
+		"refresh_token": foundUser.RefreshToken})
 }
 
 // View information account by uid

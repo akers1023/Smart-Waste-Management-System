@@ -30,7 +30,9 @@ type User struct {
 	RefreshToken *string   `json:"refresh_token"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
-	Role         Role      `json:"role"`
+	Role         string    `json:"role"`
+	// Role         Role      `json:"role"`
+
 }
 
 func MigrateUser(db *gorm.DB) error {

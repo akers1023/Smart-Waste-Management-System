@@ -6,8 +6,12 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/akers1023/Smart-Waste-Management-System/internal/app/handlers"
 	"github.com/akers1023/Smart-Waste-Management-System/internal/app/models"
+	"github.com/akers1023/Smart-Waste-Management-System/internal/app/repository"
+	"github.com/akers1023/Smart-Waste-Management-System/internal/app/service"
 	"github.com/akers1023/Smart-Waste-Management-System/internal/connections"
+	"github.com/akers1023/Smart-Waste-Management-System/internal/routes"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
@@ -40,6 +44,16 @@ func main() {
 		log.Fatal("could not migrate db")
 	}
 	fmt.Println("ok con de")
+
+	repo := repository.NewUserRepository(db)
+	userService := service.NewUserService(repo) // Điền thêm thông tin cần thiết
+
+	// Tạo đối tượng UserHandler và truyền vào UserService
+	userHandler := handlers.NewUserHandler(userService) //ervice) //
+
+	// Gọi hàm UserRoutes với đối tượng UserHandler vừa tạo
 	app := fiber.New()
+	routes.UserRoutes(app, userHandler)
+	// routes.UserRoutes(app, repo)
 	log.Fatal(app.Listen(":1234"))
 }
